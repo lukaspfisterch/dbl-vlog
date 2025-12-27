@@ -49,28 +49,28 @@ dbl-vlog is a substrate, not a system.
 
 ## Conceptual position in DBL
 
+```text
 Raw inputs
-│
-▼
+  |
+  v
 [ Boundaries (L) ]  (not implemented here)
-│
-▼
+  |
+  v
 [ Governance (G) ]  (not implemented here)
-│
-▼
+  |
+  v
 DECISION events
-│
-▼
+  |
+  v
 ┌─────────────────────┐
-│ dbl-vlog (V)         │  ← this library
+│ dbl-vlog (V)         │  <- this library
 │ append-only log      │
 │ deterministic V      │
 └─────────────────────┘
-│
-▼
+  |
+  v
 Execution / Observation  (out of scope)
-
-dbl-vlog is authoritative **only** for the structure and integrity of **V**.
+```
 
 ---
 
