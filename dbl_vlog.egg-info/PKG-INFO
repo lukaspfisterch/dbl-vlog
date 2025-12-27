@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: dbl-vlog
+Version: 0.1.0
+Summary: DBL event substrate V with deterministic canonicalization and digests
+Requires-Python: >=3.11

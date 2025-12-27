@@ -1,0 +1,9 @@
+[project]
+name = "dbl-vlog"
+version = "0.1.0"
+description = "DBL event substrate V with deterministic canonicalization and digests"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
