@@ -4,8 +4,9 @@
 **dbl-vlog** implements the append-only event stream **V** for *Deterministic Boundary Layers (DBL)*.
 
 It provides a minimal, reference-grade substrate for recording events with deterministic
-canonicalization and cryptographic digests, enabling auditability, replay, and strict
-separation of normative and observational data.
+canonicalization and cryptographic digests, for applications requiring reproducible,
+verifiable traces where determinism and strict non-interference between normative and
+observational data are critical.
 
 This library implements **only V** and its invariants.
 "vlog" means V log (not "video log").
@@ -38,7 +39,8 @@ dbl-vlog provides the following guarantees by construction:
   Required boundary and policy identity footprints can be verified in deterministic fields.
 
 - **Normative projection**
-  Deterministic extraction of DECISION-only streams (V_norm).
+  Deterministic extraction of DECISION-only streams (V_norm), yielding the normative
+  behavior already committed in the stream.
 
 ---
 
@@ -304,3 +306,6 @@ For the shared conceptual core (events, phases, separation), see:
 
 For the architectural overview and repository map, see:
 - **[deterministic-boundary-layer](https://github.com/lukaspfisterch/deterministic-boundary-layer)**
+
+dbl-vlog implements only the event substrate V and intentionally excludes boundary
+admission, governance, and execution.
