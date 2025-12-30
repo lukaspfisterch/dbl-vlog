@@ -42,6 +42,14 @@ def event_digest_hex(event: DblEvent, *, enforce_keys: bool = True) -> str:
     return event_digest(event, enforce_keys=enforce_keys).hex()
 
 
+def event_canonical_bytes(event: DblEvent, *, enforce_keys: bool = True) -> bytes:
+    """
+    Canonical JSON bytes of the digest payload, without hashing.
+    """
+    payload = event_digest_payload(event, enforce_keys=enforce_keys)
+    return canonical_json_bytes(payload)
+
+
 def v_digest(event_digests: list[bytes]) -> bytes:
     """
     Digest of V over ordered event digests.

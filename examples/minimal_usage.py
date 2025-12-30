@@ -16,13 +16,19 @@ def main() -> None:
 
     e0 = DblEvent(
         kind=DblEventKind.INTENT,
-        deterministic_fields={"request_id": "r-001", "actor": "user123"},
+        deterministic_fields={
+            "correlation_id": "r-001",
+            "actor": "user123",
+            "boundary_version": 1,
+            "boundary_config_hash": "sha256:" + "0" * 64,
+            "input_digest": "sha256:" + "1" * 64,
+        },
         observational_fields={"received_at": "2025-12-27T16:00:00+01:00"},
     )
 
     e1 = DblEvent(
         kind=DblEventKind.DECISION,
-        deterministic_fields={"request_id": "r-001", "policy_version": 3, "outcome": "ALLOW"},
+        deterministic_fields={"correlation_id": "r-001", "policy_version": 3, "outcome": "ALLOW"},
         observational_fields={"decided_at": "2025-12-27T16:00:01+01:00"},
     )
 

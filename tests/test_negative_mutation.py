@@ -8,6 +8,8 @@ from dbl_vlog import (
     CanonicalizationError,
     DblEvent,
     DblEventKind,
+    event_canonical_bytes,
+    verify_deterministic_is_canonicalizable,
     verify_append_only,
 )
 from dbl_vlog.digest import event_digest
@@ -18,6 +20,27 @@ def test_event_is_frozen_and_cannot_be_mutated() -> None:
     with pytest.raises(Exception):
         # dataclass is frozen
         e.kind = DblEventKind.DECISION  # type: ignore[misc]
+
+
+def test_event_fields_are_immutable() -> None:
+    e = DblEvent(kind=DblEventKind.INTENT, deterministic_fields={"a": 1}, observational_fields={})
+    with pytest.raises(TypeError):
+        e.deterministic_fields["a"] = 2
+    with pytest.raises(TypeError):
+        e.observational_fields["x"] = 3
+
+
+def test_nested_mutation_changes_digest() -> None:
+    inner = {"y": 1}
+    e = DblEvent(
+        kind=DblEventKind.INTENT,
+        deterministic_fields={"x": inner},
+        observational_fields={},
+    )
+    d1 = event_digest(e)
+    inner["y"] = 2
+    d2 = event_digest(e)
+    assert d1 != d2
 
 
 def test_stream_is_immutable_tuple() -> None:
@@ -50,6 +73,28 @@ def test_float_in_deterministic_fields_is_rejected() -> None:
     )
     with pytest.raises(CanonicalizationError):
         event_digest(e)
+
+
+def test_verify_deterministic_is_canonicalizable_rejects_float() -> None:
+    v = BehaviorV().append(
+        DblEvent(
+            kind=DblEventKind.INTENT,
+            deterministic_fields={"x": 1.5},
+            observational_fields={},
+        )
+    )
+    with pytest.raises(CanonicalizationError):
+        verify_deterministic_is_canonicalizable(v)
+
+
+def test_event_canonical_bytes_matches_digest_payload() -> None:
+    e = DblEvent(
+        kind=DblEventKind.INTENT,
+        deterministic_fields={"a": 1},
+        observational_fields={"x": 2},
+    )
+    b = event_canonical_bytes(e)
+    assert b.startswith(b"{")
 
 
 def test_forbidden_key_in_deterministic_fields_is_rejected() -> None:

@@ -22,6 +22,12 @@ class BehaviorV:
     def __iter__(self) -> Iterator[DblEvent]:
         return iter(self.events)
 
+    def __repr__(self) -> str:
+        if not self.events:
+            return "BehaviorV(len=0)"
+        digest_prefix = self.digest_hex()[:8]
+        return f"BehaviorV(len={len(self)}, digest={digest_prefix}...)"
+
     def at(self, index: int) -> DblEvent:
         return self.events[index]
 

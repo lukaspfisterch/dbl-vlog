@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import unicodedata
+from collections.abc import Mapping
 from typing import Any, Iterable
 
 from .exceptions import CanonicalizationError
@@ -32,7 +33,7 @@ def _norm_str(s: str) -> str:
 
 
 def enforce_forbidden_keys(
-    deterministic_fields: dict[str, Any],
+    deterministic_fields: Mapping[str, Any],
     forbidden_keys: Iterable[str] = DEFAULT_FORBIDDEN_KEYS,
 ) -> None:
     """
@@ -74,7 +75,7 @@ def canonicalize_value(v: Any) -> Any:
     if isinstance(v, (list, tuple)):
         return [canonicalize_value(x) for x in v]
 
-    if isinstance(v, dict):
+    if isinstance(v, Mapping):
         out: dict[str, Any] = {}
         for k, val in v.items():
             if not isinstance(k, str):

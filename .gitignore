@@ -10,5 +10,21 @@ __pycache__/
 # Virtualenv
 .venv/
 
+# Local workflow
+inventory.md
+
+# Test / tooling caches
+.pytest_cache/
+.cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+coverage.xml
+htmlcov/
+.hypothesis/
+
 # OS
 .DS_Store
+Thumbs.db

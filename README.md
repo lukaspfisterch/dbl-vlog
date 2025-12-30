@@ -1,4 +1,5 @@
-# dbl-vlog
+# dbl-vlog 0.3.0
+[![tests](https://github.com/lukaspfisterch/dbl-vlog/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/lukaspfisterch/dbl-vlog/actions/workflows/tests.yml)
 
 **dbl-vlog** implements the append-only event stream **V** for *Deterministic Boundary Layers (DBL)*.
 
@@ -7,6 +8,7 @@ canonicalization and cryptographic digests, enabling auditability, replay, and s
 separation of normative and observational data.
 
 This library implements **only V** and its invariants.
+"vlog" means V log (not "video log").
 
 ---
 
@@ -15,7 +17,11 @@ This library implements **only V** and its invariants.
 dbl-vlog provides the following guarantees by construction:
 
 - **Append-only, immutable event stream (V)**
-  Events are immutable once appended. Stream extensions are prefix-only.
+  Events are immutable at the event surface; nested values must not be mutated by callers.
+  Stream extensions are prefix-only.
+
+- **Ordering constraints verification**
+  Explicit verification of per-request ordering (DECISION before EXECUTION/PROOF).
 
 - **Deterministic canonicalization**
   Deterministic fields are transformed into stable, platform-independent bytes.
@@ -28,8 +34,37 @@ dbl-vlog provides the following guarantees by construction:
   - Deterministic fields participate in digests
   - Observational fields are explicitly excluded and cannot influence replay or projection
 
+- **Deterministic identity fields**
+  Required boundary and policy identity footprints can be verified in deterministic fields.
+
 - **Normative projection**
   Deterministic extraction of DECISION-only streams (V_norm).
+
+---
+
+## Contracts (normative)
+
+The contracts in `docs/contracts/` are normative for compatibility. If code and contracts
+diverge, contracts win (until a versioned contract update).
+
+- `docs/contracts/index.md`
+- `docs/contracts/trace.md`
+- `docs/contracts/verify.md`
+- `docs/contracts/digest.md`
+
+---
+
+## API surface (minimal)
+
+Core functions:
+- `verify_append_only(prev_v, next_v)`
+- `verify_ordering(v, id_key="correlation_id", require_intent_before_decision=False, disallow_decision_after_execution=True, max_decisions_per_id=1)`
+- `verify_identity_fields(v, id_key="correlation_id")`
+- `verify_deterministic_is_canonicalizable(v)`
+- `project_normative(v)`
+- `event_canonical_bytes(event, enforce_keys=True)`
+
+The canonical per-request key in deterministic fields is `correlation_id`.
 
 ---
 
@@ -44,6 +79,7 @@ dbl-vlog deliberately does **not** implement:
 - adaptive or learning-based behavior
 
 dbl-vlog is a substrate, not a system.
+Verifier functions validate trace form only; they do not decide content or outcomes.
 
 ---
 
@@ -91,8 +127,10 @@ The test suite asserts DBL-critical invariants:
 - determinism under reordering of fields
 - observational non-interference
 - append-only violations
+- ordering constraints (DECISION before EXECUTION/PROOF)
 - ordering sensitivity of V digests
 - canonicalization rejection of ambiguous types
+- deterministic identity field requirements (boundary/policy)
 
 ## Minimal example
 
@@ -117,6 +155,24 @@ Expected output demonstrates:
 
 These choices are conservative by design to prevent semantic drift and
 cross-platform ambiguity.
+
+---
+
+## Verifier contracts
+
+`verify_ordering` enforces per-correlation structural constraints:
+- EXECUTION/PROOF requires a prior DECISION for the same `correlation_id`.
+- Optionally requires INTENT before DECISION.
+- By default rejects DECISION after any EXECUTION/PROOF for the same `correlation_id`.
+- By default limits DECISION count to `max_decisions_per_id=1` to prevent late normative overrides.
+
+`verify_identity_fields` enforces deterministic trace identity footprints:
+- INTENT requires `boundary_version`, `boundary_config_hash`, and `input_digest` or `intent_digest`.
+- DECISION requires `policy_version` or `policy_digest`.
+- Digest labels must be `sha256:<64 hex>`.
+
+Append-only logs prevent mutation, but not late normative redefinition.
+The default verifier settings make the stream suitable as a pre-execution commitment substrate.
 
 ---
 
@@ -233,9 +289,18 @@ dbl-vlog is DBL-compliant because it:
 
 It makes no claims beyond the DBL model and deliberately avoids implementing
 components (L, G, execution) that belong to other layers.
+For these reasons, dbl-vlog serves as a reliable, reference-grade substrate
+for building DBL-compliant systems.
 
 ---
 
-## License
+## Related repositories
 
-MIT
+For the full DBL axiom set and reference execution semantics, see:
+- **[dbl-reference](https://github.com/lukaspfisterch/dbl-reference)**
+
+For the shared conceptual core (events, phases, separation), see:
+- **[dbl-core](https://github.com/lukaspfisterch/dbl-core)**
+
+For the architectural overview and repository map, see:
+- **[deterministic-boundary-layer](https://github.com/lukaspfisterch/deterministic-boundary-layer)**
