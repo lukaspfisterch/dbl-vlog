@@ -10,7 +10,7 @@ Public contract for DBL traces as represented in V.
 
 ## Fields
 - Deterministic fields participate in digests and replay semantics.
-- Observational fields are excluded from digests and have no normative effect.
+- Observational fields are excluded from digests and have no authoritative effect.
 Events are immutable; field maps are read-only. Nested values can still be mutable
 and must be treated as immutable by callers.
 

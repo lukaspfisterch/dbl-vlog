@@ -1,6 +1,6 @@
 # Contracts
 
-These documents are normative for compatibility.
+These documents are authoritative for compatibility.
 Compatibility means identical digest bytes for the same deterministic fields under the same schema_version.
 
 - [Trace Contract](trace.md)

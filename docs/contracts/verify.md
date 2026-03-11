@@ -25,7 +25,7 @@ Relaxing them changes trace admissibility for pre-execution commitment use.
 
 ## Purpose
 These checks ensure the stream is DBL-semantically usable and prevent late
-normative overrides while keeping governance external.
+authoritative overrides while keeping governance external.
 
 ## Versioning
 Contract changes require a library minor bump; breaking changes require a major bump.

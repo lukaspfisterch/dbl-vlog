@@ -5,7 +5,7 @@
 
 It provides a minimal, reference-grade substrate for recording events with deterministic
 canonicalization and cryptographic digests, for applications requiring reproducible,
-verifiable traces where determinism and strict non-interference between normative and
+verifiable traces where determinism and strict non-interference between authoritative and
 observational data are critical.
 
 This library implements **only V** and its invariants.
@@ -31,22 +31,22 @@ dbl-vlog provides the following guarantees by construction:
   - Content-based event digests (order-independent)
   - Stream digests committing to event order
 
-- **Normative vs observational separation**
+- **Authoritative vs observational separation**
   - Deterministic fields participate in digests
   - Observational fields are explicitly excluded and cannot influence replay or projection
 
 - **Deterministic identity fields**
   Required boundary and policy identity footprints can be verified in deterministic fields.
 
-- **Normative projection**
-  Deterministic extraction of DECISION-only streams (V_norm), yielding the normative
+- **Authoritative projection**
+  Deterministic extraction of DECISION-only streams (V_norm), yielding the authoritative
   behavior already committed in the stream.
 
 ---
 
-## Contracts (normative)
+## Contracts (authoritative)
 
-The contracts in `docs/contracts/` are normative for compatibility. If code and contracts
+The contracts in `docs/contracts/` are authoritative for compatibility. If code and contracts
 diverge, contracts win (until a versioned contract update).
 
 - `docs/contracts/index.md`
@@ -166,14 +166,14 @@ cross-platform ambiguity.
 - EXECUTION/PROOF requires a prior DECISION for the same `correlation_id`.
 - Optionally requires INTENT before DECISION.
 - By default rejects DECISION after any EXECUTION/PROOF for the same `correlation_id`.
-- By default limits DECISION count to `max_decisions_per_id=1` to prevent late normative overrides.
+- By default limits DECISION count to `max_decisions_per_id=1` to prevent late authoritative overrides.
 
 `verify_identity_fields` enforces deterministic trace identity footprints:
 - INTENT requires `boundary_version`, `boundary_config_hash`, and `input_digest` or `intent_digest`.
 - DECISION requires `policy_version` or `policy_digest`.
 - Digest labels must be `sha256:<64 hex>`.
 
-Append-only logs prevent mutation, but not late normative redefinition.
+Append-only logs prevent mutation, but not late authoritative redefinition.
 The default verifier settings make the stream suitable as a pre-execution commitment substrate.
 
 ---
@@ -193,7 +193,7 @@ This section explains how dbl-vlog aligns with the DBL definitions and axioms.
 dbl-vlog implements:
 - the append-only event stream **V**
 - deterministic canonicalization and digests
-- replay-safe normative projection
+- replay-safe authoritative projection
 
 dbl-vlog does **not** implement:
 - boundaries (L)
@@ -218,16 +218,16 @@ Once appended, events cannot be mutated or removed.
 
 ---
 
-### Normative primacy of DECISION events (Axiom A2)
+### Authoritative primacy of DECISION events (Axiom A2)
 
-Under DBL, only DECISION events are normative.
+Under DBL, only DECISION events are authoritative.
 
 dbl-vlog:
 - represents event kinds explicitly (INTENT, DECISION, EXECUTION, PROOF)
-- treats only DECISION events as normative
+- treats only DECISION events as authoritative
 - provides deterministic projection of the DECISION-only stream (V_norm)
 
-All other events are non-normative by construction.
+All other events are non-authoritative by construction.
 
 ---
 
@@ -261,22 +261,22 @@ These choices are conservative and prevent cross-platform or runtime ambiguity.
 
 ### Replay equivalence (Claim 3)
 
-DBL defines replay as reconstruction of normative state from V alone.
+DBL defines replay as reconstruction of authoritative state from V alone.
 
 dbl-vlog supports this by:
 - preserving total order via stream position t(e)
-- excluding observational data from normative projection
+- excluding observational data from authoritative projection
 - allowing deterministic reconstruction of the DECISION sequence
 
 Replay does not depend on execution behavior, timing, or infrastructure.
 
 ---
 
-### No hidden normativity
+### No hidden governance authority
 
 dbl-vlog introduces no implicit decisions, policies, or side effects.
 
-All normativity must be expressed explicitly as DECISION events produced
+All governance authority must be expressed explicitly as DECISION events produced
 by external governance logic (G), which is out of scope for this library.
 
 ---
@@ -285,7 +285,7 @@ by external governance logic (G), which is out of scope for this library.
 
 dbl-vlog is DBL-compliant because it:
 - faithfully implements V and its invariants
-- enforces normative minimalism
+- enforces authoritative minimalism
 - guarantees observational non-interference
 - enables deterministic replay and auditability
 
