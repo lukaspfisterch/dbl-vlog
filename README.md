@@ -1,4 +1,4 @@
-# dbl-vlog 0.3.0
+# dbl-vlog 0.3.1
 [![tests](https://github.com/lukaspfisterch/dbl-vlog/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/lukaspfisterch/dbl-vlog/actions/workflows/tests.yml)
 
 This is a position note on the DBL event layer, not a general introduction to DBL.

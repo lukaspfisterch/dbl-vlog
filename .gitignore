@@ -12,6 +12,9 @@ __pycache__/
 
 # Local workflow
 inventory.md
+inventory_*.md
+inventory_summary*.json
+tools/refresh_inventory.py
 
 # Test / tooling caches
 .pytest_cache/
