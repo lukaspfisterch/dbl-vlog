@@ -1,12 +1,18 @@
 # dbl-vlog 0.3.0
 [![tests](https://github.com/lukaspfisterch/dbl-vlog/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/lukaspfisterch/dbl-vlog/actions/workflows/tests.yml)
 
+This is a position note on the DBL event layer, not a general introduction to DBL.
+
+If you want the architectural entry point first, start here:
+
+- [deterministic-boundary-layer](https://github.com/lukaspfisterch/deterministic-boundary-layer)
+- [dbl-gateway](https://github.com/lukaspfisterch/dbl-gateway)
+- [dbl-paper](https://github.com/lukaspfisterch/dbl-paper)
+
 **dbl-vlog** implements the append-only event stream **V** for *Deterministic Boundary Layers (DBL)*.
 
-It provides a minimal, reference-grade substrate for recording events with deterministic
-canonicalization and cryptographic digests, for applications requiring reproducible,
-verifiable traces where determinism and strict non-interference between authoritative and
-observational data are critical.
+It provides a minimal substrate for deterministic event recording, canonicalization, and
+cryptographic digests where authoritative and observational data must remain strictly separated.
 
 This library implements **only V** and its invariants.
 "vlog" means V log (not "video log").
